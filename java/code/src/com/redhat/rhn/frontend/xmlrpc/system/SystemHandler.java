@@ -2068,7 +2068,7 @@ public class SystemHandler extends BaseHandler {
         for (Iterator<String> itr = keys.iterator(); itr.hasNext();) {
             String label = itr.next();
             if (org.hasCustomDataKey(label) && !StringUtils.isBlank(values.get(label))) {
-                server.addCustomDataValue(label, values.get(label), loggedInUser);
+                server.addCustomDataValue(label, values.get(label), loggedInUser, false);
             }
             else {
                 // Add label to skippedKeys list

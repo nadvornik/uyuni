@@ -1102,7 +1102,11 @@ public class SystemHandlerTest extends BaseHandlerTestCase {
         String val2 = "foo" + TestUtils.randomString();
         String fooKey = "foo" + TestUtils.randomString();
 
-        server.addCustomDataValue(testKey, val1, admin);
+        server.addCustomDataValue(testKey, val1, admin, true);
+        Map<String, Object> pillar = readCustomInfoPillar(server);
+
+        assertTrue(pillar.containsKey(keyLabel));
+        assertEquals(val1, pillar.get(keyLabel));
 
         CustomDataValue val = server.getCustomDataValue(testKey);
         //make sure the value was set properly
@@ -1120,7 +1124,7 @@ public class SystemHandlerTest extends BaseHandlerTestCase {
         assertEquals(val2, val.getValue());
         assertEquals(1, setResult);
 
-        Map<String, Object> pillar = readCustomInfoPillar(server);
+        pillar = readCustomInfoPillar(server);
 
         assertTrue(pillar.containsKey(keyLabel));
         assertEquals(val2, pillar.get(keyLabel));

@@ -213,14 +213,14 @@ public class ServerFactoryTest extends BaseTestCaseWithUser {
         assertNull(testServer.getCustomDataValue(testKey));
 
         // add the test key to the server and make sure we can get to it.
-        testServer.addCustomDataValue(testKey.getLabel(), "foo", user);
+        testServer.addCustomDataValue(testKey.getLabel(), "foo", user, true);
         assertNotNull(testServer.getCustomDataValue(testKey));
         assertTrue(testServer.getCustomDataValues().size() > 0);
 
         // try sending null for key
         int numVals = testServer.getCustomDataValues().size();
         try {
-            testServer.addCustomDataValue(new CustomDataKey(), "foo", user);
+            testServer.addCustomDataValue(new CustomDataKey(), "foo", user, true);
             fail("server.addCustomDataValue() allowed a value set for an undefined key.");
         }
         catch (UndefinedCustomDataKeyException e) {

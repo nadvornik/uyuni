@@ -38,6 +38,7 @@ import com.redhat.rhn.manager.kickstart.cobbler.CobblerXMLRPCHelper;
 import com.redhat.rhn.manager.system.SystemManager;
 
 import com.suse.manager.model.maintenance.MaintenanceSchedule;
+import com.suse.manager.webui.services.pillar.MinionPillarManager;
 import com.suse.utils.Opt;
 import java.net.IDN;
 import java.sql.Timestamp;
@@ -1247,10 +1248,17 @@ public class Server extends BaseDomainHelper implements Identifiable {
      * Adds a custom data value to the set of custom data values
      * for this server.
      * @param value The CustomDataValue to add
+     * @param updatePillar Update pillar if true and if this is a MinionServer
      */
-    public void addCustomDataValue(CustomDataValue value) {
+    public void addCustomDataValue(CustomDataValue value, boolean updatePillar) {
         value.setServer(this);
         customDataValues.add(value);
+
+        if (updatePillar) {
+            this.asMinionServer().ifPresent(minion -> {
+                MinionPillarManager.INSTANCE.generatePillar(minion);
+            });
+        }
     }
 
     /**
@@ -1258,8 +1266,9 @@ public class Server extends BaseDomainHelper implements Identifiable {
      * @param key The CustomDataKey for this value
      * @param value The value to set
      * @param user The user doing the setting
+     * @param updatePillar Update pillar if true and if this is a MinionServer
      */
-    public void addCustomDataValue(CustomDataKey key, String value, User user) {
+    public void addCustomDataValue(CustomDataKey key, String value, User user, boolean updatePillar) {
         // Check for null key values.
         if (key == null || key.getLabel() == null) {
             throw new
@@ -1286,7 +1295,7 @@ public class Server extends BaseDomainHelper implements Identifiable {
         customValue.setValue(value);
         customValue.setLastModifier(user);
         // add customValue to customDataValues set
-        addCustomDataValue(customValue);
+        addCustomDataValue(customValue, updatePillar);
     }
 
     /**
@@ -1294,11 +1303,12 @@ public class Server extends BaseDomainHelper implements Identifiable {
      * @param keyLabel The label for the CustomDataKey for this value
      * @param value The value to set
      * @param user The user doing the setting
+     * @param updatePillar Update pillar if true and if this is a MinionServer
      */
-    public void addCustomDataValue(String keyLabel, String value, User user) {
+    public void addCustomDataValue(String keyLabel, String value, User user, boolean updatePillar) {
         // look up CustomDataKey by keyLabel
         CustomDataKey key = OrgFactory.lookupKeyByLabelAndOrg(keyLabel, user.getOrg());
-        addCustomDataValue(key, value, user);
+        addCustomDataValue(key, value, user, updatePillar);
     }
 
     /**
