@@ -31,13 +31,13 @@ import com.redhat.rhn.domain.user.User;
 import com.redhat.rhn.domain.user.UserFactory;
 
 import com.suse.manager.webui.services.SaltStateGeneratorService;
-import com.suse.manager.webui.services.pillar.MinionGroupMembershipPillarGenerator;
-import com.suse.manager.webui.services.pillar.MinionPillarFileManager;
+import com.suse.manager.webui.services.pillar.MinionPillarManager;
 import com.suse.utils.Opt;
 
 import org.apache.log4j.Logger;
 
 import java.util.Collection;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -54,17 +54,6 @@ public class ServerGroupManager {
 
     /** Logger */
     private static final Logger LOG = Logger.getLogger(ServerGroupManager.class);
-
-    private MinionPillarFileManager minionGroupMembershipPillarFileManager =
-            new MinionPillarFileManager(new MinionGroupMembershipPillarGenerator());
-
-    /**
-     * Only used for unit tests.
-     * @param pillarFileManagerIn to set
-     */
-    public void setMinionGroupMembershipPillarFileManager(MinionPillarFileManager pillarFileManagerIn) {
-        this.minionGroupMembershipPillarFileManager = pillarFileManagerIn;
-    }
 
     /**
      * Lookup a ServerGroup by ID and organization.
@@ -351,7 +340,8 @@ public class ServerGroupManager {
      */
     public void updatePillarAfterGroupUpdateForServers(Collection<Server> servers) {
         servers.stream().map(server -> server.asMinionServer()).flatMap(Opt::stream)
-                .forEach(this.minionGroupMembershipPillarFileManager::updatePillarFile);
+                .forEach(s -> MinionPillarManager.INSTANCE.generatePillar(s,
+                         EnumSet.of(MinionPillarManager.PillarSubset.GROUP_MEMBERSHIP)));
     }
 
     /**

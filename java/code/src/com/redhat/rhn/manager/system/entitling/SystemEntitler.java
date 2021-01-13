@@ -45,13 +45,13 @@ import com.suse.manager.webui.services.iface.MonitoringManager;
 import com.suse.manager.webui.services.iface.SaltApi;
 import com.suse.manager.webui.services.iface.VirtManager;
 import com.suse.manager.webui.services.impl.SaltSSHService;
-import com.suse.manager.webui.services.pillar.MinionPillarFileManager;
-import com.suse.manager.webui.services.pillar.MinionVirtualizationPillarGenerator;
+import com.suse.manager.webui.services.pillar.MinionPillarManager;
 
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -138,7 +138,8 @@ public class SystemEntitler {
             if (wasVirtEntitled && !EntitlementManager.VIRTUALIZATION.equals(ent) ||
                     !wasVirtEntitled && EntitlementManager.VIRTUALIZATION.equals(ent)) {
                 this.updateLibvirtEngine(minion);
-                new MinionPillarFileManager(new MinionVirtualizationPillarGenerator()).updatePillarFile(minion);
+                MinionPillarManager.INSTANCE.generatePillar(minion,
+                    EnumSet.of(MinionPillarManager.PillarSubset.VIRTUALIZATION));
             }
 
             if (EntitlementManager.MONITORING.equals(ent)) {
