@@ -46,6 +46,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -1256,7 +1257,8 @@ public class Server extends BaseDomainHelper implements Identifiable {
 
         if (updatePillar) {
             this.asMinionServer().ifPresent(minion -> {
-                MinionPillarManager.INSTANCE.generatePillar(minion);
+                MinionPillarManager.INSTANCE.generatePillar(minion,
+                    EnumSet.of(MinionPillarManager.PillarSubset.CUSTOM_INFO));
             });
         }
     }

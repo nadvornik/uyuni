@@ -58,6 +58,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -119,7 +120,8 @@ public class ServerFactory extends HibernateFactory {
         }
         server.getCustomDataValues().clear();
         server.asMinionServer().ifPresent(minion -> {
-           MinionPillarManager.INSTANCE.generatePillar(minion);
+           MinionPillarManager.INSTANCE.generatePillar(minion,
+               EnumSet.of(MinionPillarManager.PillarSubset.CUSTOM_INFO));
         });
     }
 
@@ -136,7 +138,8 @@ public class ServerFactory extends HibernateFactory {
             SINGLETON.removeObject(value);
         }
         server.asMinionServer().ifPresent(minion -> {
-           MinionPillarManager.INSTANCE.generatePillar(minion);
+           MinionPillarManager.INSTANCE.generatePillar(minion,
+               EnumSet.of(MinionPillarManager.PillarSubset.CUSTOM_INFO));
         });
     }
 
@@ -695,7 +698,8 @@ public class ServerFactory extends HibernateFactory {
             server.getCustomDataValues().remove(value);
             SINGLETON.removeObject(value);
             server.asMinionServer().ifPresent(minion -> {
-                MinionPillarManager.INSTANCE.generatePillar(minion);
+                MinionPillarManager.INSTANCE.generatePillar(minion,
+                    EnumSet.of(MinionPillarManager.PillarSubset.CUSTOM_INFO));
             });
         }
 

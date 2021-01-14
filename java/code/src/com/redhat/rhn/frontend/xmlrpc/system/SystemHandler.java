@@ -185,6 +185,7 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -2077,7 +2078,8 @@ public class SystemHandler extends BaseHandler {
         }
 
         server.asMinionServer().ifPresent(minion -> {
-            MinionPillarManager.INSTANCE.generatePillar(minion);
+            MinionPillarManager.INSTANCE.generatePillar(minion,
+                EnumSet.of(MinionPillarManager.PillarSubset.CUSTOM_INFO));
         });
 
         // If we skipped any keys, we need to throw an exception and let the user know.
