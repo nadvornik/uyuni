@@ -10,6 +10,8 @@ zypper --non-interactive in avahi
 cp /root/avahi-daemon.conf /etc/avahi/avahi-daemon.conf
 /usr/sbin/avahi-daemon -D
 
+sleep 100
+
 # re-enable normal repo and remove helper repo
 zypper mr --enable Test-Channel-x86_64 || :
 zypper rr sles12sp4
@@ -17,3 +19,5 @@ zypper rr sles12sp4
 # do the real test
 zypper --non-interactive --gpg-auto-import-keys ref
 zypper --non-interactive in aaa_base aaa_base-extras net-tools timezone vim less sudo tar python3 python3-xml
+
+/usr/sbin/avahi-daemon -k
