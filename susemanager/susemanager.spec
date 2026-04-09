@@ -205,7 +205,6 @@ sed -i '1s=^#!/usr/bin/python3=#!/usr/bin/%{use_python_shebang}=' src/mgr-salt-s
 %install
 mkdir -p %{buildroot}/%{_prefix}/lib/susemanager/bin/
 mkdir -p %{buildroot}/%{_prefix}/lib/susemanager/hooks/
-install -m 0755 bin/* %{buildroot}/%{_prefix}/lib/susemanager/bin/
 
 mkdir -p %{buildroot}/%{_datadir}/rhn/config-defaults
 mkdir -p %{buildroot}/%{_sysconfdir}/logrotate.d
@@ -274,7 +273,6 @@ sed -i '/You can access .* via https:\/\//d' /tmp/motd 2> /dev/null ||:
 %dir %{_prefix}/lib/susemanager
 %dir %{_prefix}/lib/susemanager/bin/
 %dir %{_prefix}/lib/susemanager/hooks/
-%{_prefix}/lib/susemanager/bin/*
 %attr(775,%{salt_user},susemanager) %dir %{wwwroot}/os-images/
 %if 0%{?suse_version} > 1320
 %{_prefix}/lib/firewalld/services/suse-manager-server.xml
